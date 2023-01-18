@@ -30,8 +30,18 @@ initializeDBAndServer();
 //API TO GET PLAYERS
 app.get("/players/", async (request, response) => {
   const getPlayersQuery = `SELECT * FROM cricket_team ORDER BY player_id`;
-  const playersArray = await db.all(getPlayersQuery);
-  response.send(playersArray);
+  let playersArray = await db.all(getPlayersQuery);
+  const newPlayersArray = playersArray.map((player) => {
+    let { player_id, player_name, jersey_number, role } = player;
+    return {
+      playerId: player_id,
+      playerName: player_name,
+      jerseyNumber: jersey_number,
+      role: role,
+    };
+  });
+
+  response.send(newPlayersArray);
 });
 
 //API TO ADD PLAYER
